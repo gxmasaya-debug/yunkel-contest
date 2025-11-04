@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユンケルゾンネロイヤルEX 販売コンクール</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .quantity-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .quantity-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .quantity-item label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .quantity-item input {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .ranking-list {
+            list-style: none;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+
+        .ranking-item:hover {
+            transform: translateX(5px);
+        }
+
+        .rank-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 15px;
+            color: white;
+        }
+
+        .rank-1 { background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); }
+        .rank-2 { background: linear-gradient(135deg, #C0C0C0 0%, #808080 100%); }
+        .rank-3 { background: linear-gradient(135deg, #CD7F32 0%, #8B4513 100%); }
+        .rank-other { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .ranking-sales {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .ranking-score {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .chart-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .success-message {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .nav-tab {
+                font-size: 0.9em;
+                padding: 10px 15px;
+            }
+
+            .quantity-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💊 ユンケルゾンネロイヤルEX</h1>
+            <p>販売コンクール 集計システム</p>
+        </div>
+
+        <div class="card">
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('input')">📝 入力</button>
+                <button class="nav-tab" onclick="switchTab('ranking')">🏆 ランキング</button>
+                <button class="nav-tab" onclick="switchTab('dashboard')">📊 ダッシュボード</button>
+            </div>
+
+            <!-- 入力フォーム -->
+            <div id="input" class="tab-content active">
+                <div class="success-message" id="successMessage">
+                    ✅ 登録が完了しました！
+                </div>
+
+                <form id="salesForm">
+                    <div class="form-group">
+                        <label for="storeName">店舗名 / 氏名 *</label>
+                        <input type="text" id="storeName" required placeholder="例: 東京支店 / 山田太郎">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">販売日 *</label>
+                        <input type="date" id="date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>販売数量</label>
+                        <div class="quantity-inputs">
+                            <div class="quantity-item">
+                                <label>22錠</label>
+                                <input type="number" id="qty22" min="0" value="0" placeholder="0">
+                            </div>
+                            <div class="quantity-item">
+                                <label>48錠</label>
+                                <input type="number" id="qty48" min="0" value="0" placeholder="0">
+                            </div>
+                            <div class="quantity-item">
+                                <label>84錠</label>
+                                <input type="number" id="qty84" min="0" value="0" placeholder="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="comment">コメント（任意）</label>
+                        <input type="text" id="comment" placeholder="例: キャンペーン実施">
+                    </div>
+
+                    <button type="submit" class="btn">📤 登録する</button>
+                </form>
+            </div>
+
+            <!-- ランキング -->
+            <div id="ranking" class="tab-content">
+                <h2 style="margin-bottom: 20px; color: #333;">🏆 販売ランキング</h2>
+                <ul class="ranking-list" id="rankingList">
+                    <!-- JavaScriptで動的生成 -->
+                </ul>
+            </div>
+
+            <!-- ダッシュボード -->
+            <div id="dashboard" class="tab-content">
+                <h2 style="margin-bottom: 20px; color: #333;">📊 集計ダッシュボード</h2>
+                
+                <div class="stats-grid" id="statsGrid">
+                    <!-- JavaScriptで動的生成 -->
+                </div>
+
+                <div class="chart-container">
+                    <h3 style="margin-bottom: 15px; color: #333;">容量別販売数</h3>
+                    <canvas id="salesChart"></canvas>
+                </div>
+
+                <div class="chart-container" style="margin-top: 20px;">
+                    <h3 style="margin-bottom: 15px; color: #333;">日別販売推移</h3>
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        // ローカルストレージのキー
+        const STORAGE_KEY = 'yunkel_sales_data';
+
+        // データの初期化
+        let salesData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+        // 今日の日付をデフォルトに設定
+        document.getElementById('date').valueAsDate = new Date();
+
+        // タブ切り替え
+        function switchTab(tabName) {
+            // すべてのタブとコンテンツを非アクティブに
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // 選択されたタブとコンテンツをアクティブに
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+
+            // ランキングとダッシュボードを更新
+            if (tabName === 'ranking') {
+                updateRanking();
+            } else if (tabName === 'dashboard') {
+                updateDashboard();
+            }
+        }
+
+        // フォーム送信
+        document.getElementById('salesForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const data = {
+                id: Date.now(),
+                storeName: document.getElementById('storeName').value,
+                date: document.getElementById('date').value,
+                qty22: parseInt(document.getElementById('qty22').value) || 0,
+                qty48: parseInt(document.getElementById('qty48').value) || 0,
+                qty84: parseInt(document.getElementById('qty84').value) || 0,
+                comment: document.getElementById('comment').value,
+                timestamp: new Date().toISOString()
+            };
+
+            // データを保存
+            salesData.push(data);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(salesData));
+
+            // 成功メッセージを表示
+            const successMsg = document.getElementById('successMessage');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+
+            // フォームをリセット
+            document.getElementById('qty22').value = '0';
+            document.getElementById('qty48').value = '0';
+            document.getElementById('qty84').value = '0';
+            document.getElementById('comment').value = '';
+        });
+
+        // ランキング更新
+        function updateRanking() {
+            // 店舗ごとに集計
+            const storeStats = {};
+            salesData.forEach(data => {
+                if (!storeStats[data.storeName]) {
+                    storeStats[data.storeName] = {
+                        name: data.storeName,
+                        total: 0,
+                        qty22: 0,
+                        qty48: 0,
+                        qty84: 0
+                    };
+                }
+                storeStats[data.storeName].qty22 += data.qty22;
+                storeStats[data.storeName].qty48 += data.qty48;
+                storeStats[data.storeName].qty84 += data.qty84;
+                storeStats[data.storeName].total += data.qty22 + data.qty48 + data.qty84;
+            });
+
+            // 合計販売数でソート
+            const rankings = Object.values(storeStats).sort((a, b) => b.total - a.total);
+
+            // ランキング表示
+            const rankingList = document.getElementById('rankingList');
+            rankingList.innerHTML = '';
+
+            if (rankings.length === 0) {
+                rankingList.innerHTML = '<p style="text-align: center; color: #999; padding: 30px;">まだデータがありません</p>';
+                return;
+            }
+
+            rankings.forEach((store, index) => {
+                const rank = index + 1;
+                const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+                
+                const li = document.createElement('li');
+                li.className = 'ranking-item';
+                li.innerHTML = `
+                    <div class="rank-badge ${rankClass}">${rank}</div>
+                    <div class="ranking-info">
+                        <div class="ranking-name">${store.name}</div>
+                        <div class="ranking-sales">
+                            22錠: ${store.qty22}個 | 48錠: ${store.qty48}個 | 84錠: ${store.qty84}個
+                        </div>
+                    </div>
+                    <div class="ranking-score">${store.total}個</div>
+                `;
+                rankingList.appendChild(li);
+            });
+        }
+
+        // ダッシュボード更新
+        let salesChart, trendChart;
+
+        function updateDashboard() {
+            // 統計情報の計算
+            const totalSales = salesData.reduce((sum, data) => 
+                sum + data.qty22 + data.qty48 + data.qty84, 0);
+            const total22 = salesData.reduce((sum, data) => sum + data.qty22, 0);
+            const total48 = salesData.reduce((sum, data) => sum + data.qty48, 0);
+            const total84 = salesData.reduce((sum, data) => sum + data.qty84, 0);
+            const uniqueStores = new Set(salesData.map(d => d.storeName)).size;
+
+            // 統計カード表示
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${totalSales}</div>
+                    <div class="stat-label">総販売数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${uniqueStores}</div>
+                    <div class="stat-label">参加店舗数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${total22}</div>
+                    <div class="stat-label">22錠</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${total48}</div>
+                    <div class="stat-label">48錠</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${total84}</div>
+                    <div class="stat-label">84錠</div>
+                </div>
+            `;
+
+            // 容量別販売グラフ
+            const salesCtx = document.getElementById('salesChart');
+            if (salesChart) salesChart.destroy();
+            
+            salesChart = new Chart(salesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['22錠', '48錠', '84錠'],
+                    datasets: [{
+                        data: [total22, total48, total84],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // 日別推移グラフ
+            const dateStats = {};
+            salesData.forEach(data => {
+                if (!dateStats[data.date]) {
+                    dateStats[data.date] = 0;
+                }
+                dateStats[data.date] += data.qty22 + data.qty48 + data.qty84;
+            });
+
+            const sortedDates = Object.keys(dateStats).sort();
+            const trendData = sortedDates.map(date => dateStats[date]);
+
+            const trendCtx = document.getElementById('trendChart');
+            if (trendChart) trendChart.destroy();
+
+            trendChart = new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: sortedDates,
+                    datasets: [{
+                        label: '日別販売数',
+                        data: trendData,
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // データエクスポート機能（デバッグ用）
+        function exportData() {
+            const dataStr = JSON.stringify(salesData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'yunkel_sales_data.json';
+            link.click();
+        }
+
+        // データクリア機能（デバッグ用）
+        function clearData() {
+            if (confirm('すべてのデータを削除しますか？')) {
+                localStorage.removeItem(STORAGE_KEY);
+                salesData = [];
+                alert('データを削除しました');
+                location.reload();
+            }
+        }
+
+        // コンソールコマンド
+        console.log('=== ユンケル販売コンクールシステム ===');
+        console.log('exportData() - データをエクスポート');
+        console.log('clearData() - データをクリア');
+    </script>
+</body>
+</html>
